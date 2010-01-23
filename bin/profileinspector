@@ -1,0 +1,4 @@
+#!/bin/bash
+classprefix="$(dirname $(readlink -f $0))"
+classprefix="$(dirname $classprefix)"
+java -cp "${classprefix}"/lib/jargp.jar:"${classprefix}"/lib/profileinspector.jar:"${classprefix}"/ org.neuvoo.profileinspector.ProfileInspector $@

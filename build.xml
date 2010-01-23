@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+
+<project name="profileinspector" default="jar">
+
+  <!-- The directories -->
+  <property name="root" value="${basedir}" />
+  <property name="src" value="${basedir}/src" />
+  <property name="bin" value="${basedir}/bin" />
+  <property name="build" value="${basedir}/build" />
+  <property name="lib" value="${basedir}/lib" />
+  <property name="dist" value="${basedir}/dist" />
+
+  <!-- Other definitions -->
+  <property name="project" value="Gentoo Profile Inspector" />
+  <property name="projname" value="profileinspector" />
+  <property name="distrib-name" value="${projname}-0.2" />
+  <property name="distrib" value="${basedir}/${distrib-name}.zip" />
+
+  <path id="classpath">
+    <fileset dir="${lib}">
+      <include name="*.jar"/>
+    </fileset>
+    <pathelement path="${build}"/>
+  </path>
+
+  <target name="clean">
+    <delete dir="${build}" />
+    <delete dir="${dist}" />
+    <delete file="${lib}/${projname}.jar" />
+    <delete file="${distrib}" />
+  </target>
+
+  <target name="compile">
+    <mkdir dir="${build}"/>
+    <javac srcdir="${src}"
+      destdir="${build}"
+      optimize="true"
+      debug="false"
+      deprecation="on">
+      <classpath refid="classpath" />
+    </javac>
+  </target>
+  
+  <target name="jar" depends="compile">
+    <jar jarfile="${lib}/${projname}.jar" basedir="${build}" />
+  </target>
+  
+  <target name="dist" depends="jar">
+    <mkdir dir="${dist}"/>
+    <copy todir="${dist}/lib">
+      <fileset dir="${lib}" />
+    </copy>
+    <copy todir="${dist}">
+      <fileset dir="${bin}">
+        <include name="run.sh" />
+      </fileset>
+      <fileset dir="${basedir}">
+        <include name="LICENSE" />
+      </fileset>
+    </copy>
+    <zip destfile="${distrib}" basedir="${dist}" />
+  </target>
+  
+
+</project>
