@@ -5,4 +5,4 @@ For binary distribution:
 ant dist
 
 To run it:
-bin/profileinspector -a i -p <path to profile>
+bin/profileinspector -p <path to profile>

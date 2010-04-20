@@ -48,6 +48,10 @@ public class ProfileInspector {
 	private boolean minus = false;
 
 	public Profile processProfile () throws ArgumentErrorException, IOException {
+		if (this.action.equals("")) {
+			this.action = "i";
+		}
+		
 		if (this.action.equals("i")) {
 			if (this.profile.equals("")) {
 				throw new ArgumentErrorException ("action i requires profile path");
@@ -94,15 +98,17 @@ public class ProfileInspector {
 	}
 
 	public static void usage () {
-		System.out.println("Usage: java ProfileInspector -a [action] [options]");
+		System.out.println("Usage: java ProfileInspector [-a <action>] [options]");
 		System.out.println("");
 		System.out.println("Actions:");
-		System.out.println("    i           Investigate (or get Info, whichever sticks)\n" +
-		                   "                the profile, and print out accumulated profile\n" +
-		                   "                information (requires -p)");
+		System.out.println("    i           Default. Investigate the profile, and print out\n" +
+		                   "                accumulated profile information (requires -p)");
 		System.out.println("");
 		System.out.println("Options:");
 		System.out.println("    -p <path>   The path to the profile to investigate");
+		System.out.println("");
+		System.out.println("    -s <string> Search for any mention of string and report to\n" +
+		                   "                stderr.");
 	}
 
 }
