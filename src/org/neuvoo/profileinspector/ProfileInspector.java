@@ -362,13 +362,13 @@ class ProfileFile {
 					if (this.exceptNoComment) {
 						System.err.println("Notice: file " + path + " line " + lineNum + ": possible comment where comment not allowed. Allowing it to be parsed by profile.");
 					} else {
-						line = line.substring(0, line.indexOf('#')).trim(); // Cut out comment // PMS 5.2.5  and we're assuming all files with line continuation use these rules)
+						line = line.substring(0, line.indexOf('#')).trim(); // Cut out comment // PMS 5.2.5 // Gentoo bug #326399: we're assuming all files with line continuation use these rules
 						if (line.equals("")) {
 							continue; // allowable comment line with no data but a comment; no need to parse it
 						}
 					}
 				}
-				if (line.endsWith("\\") || (this.type == this.TYPE_KEYVAL_BASH && !line.endsWith("\""))) { // line continuation // PMS 5.2.5 (and we're assuming all files with line continuation use these rules)
+				if (line.endsWith("\\") || (this.type == this.TYPE_KEYVAL_BASH && !line.endsWith("\""))) { // line continuation // PMS 5.2.5 // // Gentoo bug #326399: we're assuming all files with line continuation use these rules
 					if (this.exceptNoLineCont) {
 						System.err.println("Notice: file " + path + " line " + lineNum + ": possible line continuation where line continuation not allowed. Allowing it to be parsed by profile.");
 					} else {
@@ -423,10 +423,10 @@ class ProfileFile {
 				}
 				value = variableName + " " + value; // prepend the key so it becomes part of the pieces variable, just like the regular 3D format
 				
-				pieces = value.split("[ \t]+"); // TODO: PMS ASSUMPTION in bash-like format
+				pieces = value.split("[ \t]+"); // Gentoo bug #326399: assuming tabs and spaces deliminate values
 			}
 			else { // everyone else is easy to parse
-				pieces = line.split("[ \t]+"); // PMS 5.2.5 (and we're assuming all white-space delimited files use this format)
+				pieces = line.split("[ \t]+"); // PMS 5.2.5 // Gentoo bug #326399: we're assuming all files with line continuation use these rules
 			}
 			
 			if (pieces.length < 1) {
