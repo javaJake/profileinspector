@@ -368,11 +368,13 @@ class ProfileFile {
 						}
 					}
 				}
-				if (line.length() > 0 && line.endsWith("\\")) { // line continuation // PMS 5.2.5 (and we're assuming all files with line continuation use these rules)
+				if (line.endsWith("\\") || (this.type == this.TYPE_KEYVAL_BASH && !line.endsWith("\""))) { // line continuation // PMS 5.2.5 (and we're assuming all files with line continuation use these rules)
 					if (this.exceptNoLineCont) {
 						System.err.println("Notice: file " + path + " line " + lineNum + ": possible line continuation where line continuation not allowed. Allowing it to be parsed by profile.");
 					} else {
-						line = line.substring(0, line.lastIndexOf('\\')).trim();
+						if (line.endsWith("\\")) {
+							line = line.substring(0, line.lastIndexOf('\\')).trim();
+						}
 						continue; // we need another line first!
 					}
 				}
