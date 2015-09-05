@@ -2,6 +2,8 @@ package org.neuvoo.profileinspector;
 
 import java.io.*;
 import org.jargp.*;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Vector;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -1005,11 +1007,12 @@ class Profile {
 	
 	public static String array3DToString (HashMap<String,Vector<String>> array, String beginSeperator, String valueSeperator, String endSeperator) {
 		String results = "";
-		Iterator arrays = array.keySet().iterator();
-		while (arrays.hasNext()) {
-			String arrayName = (String)arrays.next();
-			Vector<String> currAarrray = array.get(arrayName);
-			if (currAarrray.size() > 0) {
+		String[] arrayNames = array.keySet().toArray(new String[0]);
+		Arrays.sort(arrayNames);
+		for (String arrayName : arrayNames) {
+			Vector<String> currArray = array.get(arrayName);
+			if (currArray.size() > 0) {
+				Collections.sort(currArray);
 				results += array2DToString(array.get(arrayName), arrayName+beginSeperator, valueSeperator, endSeperator+"\n");
 			}
 		}
