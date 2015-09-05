@@ -3,6 +3,9 @@ Give it a Gentoo profile, and this utility will parse it and all its parents. It
 
 It also complains if the PMS is violated by unexpected input or circular dependencies.
 
+## Code Quality
+This was written fairly quickly to just get a job done. It needs a lot of love. I apologize in advance for the mess.
+
 # Building
 To build, run:
 ````bash
