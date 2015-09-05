@@ -323,10 +323,8 @@ class ProfileFile {
 					} finally {
 						return;
 					}
-				} else {
-					fileHasEnded = false; // file has not really ended. Proceed.
 				}
-				
+
 				if (line.indexOf('#') > -1) { // comment cancels even line continuation so it comes first
 					if (this.exceptNoComment) {
 						System.err.println("Notice: file " + path + " line " + lineNum + ": possible comment where comment not allowed. Allowing it to be parsed by profile.");
@@ -344,7 +342,9 @@ class ProfileFile {
 						if (line.endsWith("\\")) {
 							line = line.substring(0, line.lastIndexOf('\\')).trim();
 						}
-						continue; // we need another line first!
+						if (!fileHasEnded) {
+							continue; // we need another line first if we have more file to work with
+						}
 					}
 				}
 				
@@ -694,7 +694,7 @@ class Profile {
 		this.verbose = verbose;
 		this.showMinus = showMinus;
 		this.search = search;
-		
+
 		File pathFile = new File(this.path);
 		String absolutePath = pathFile.getCanonicalPath(); // resolve symlinks, get absolute path. Used for cycle checking.
 		
@@ -920,13 +920,28 @@ class Profile {
 		}
 		Vector<String> parents = this.environment.getVars("parent", "list");
 		for (String parent: parents) {
-			String absoluteParent = new File(this.path+"/"+parent).getCanonicalPath();
+
+			String absoluteParent;
+			String funtooURL = null;
+			if (parent.startsWith("gentoo:")) {
+				funtooURL = "gentoo:";
+			} else if (parent.startsWith(":")) {
+				funtooURL = ":";
+			}
+
+			if (funtooURL != null) {
+				absoluteParent = parent.replace(funtooURL, "/usr/portage/profiles/");
+				System.err.println("Warning: non-PMS Funtoo URL translated: " + parent + " -> " + absoluteParent);
+			} else {
+				absoluteParent = new File(this.path+"/"+parent).getCanonicalPath();
+			}
+
 			if (existingParents.contains(absoluteParent)) { // PMS 5.2.1
 				throw new IllegalArgumentException("Found a cycle, which results in a broken profile: child path " + this.path + " is trying to include parent path " + parent + " more than once.");
 			}
 			
 			existingParents.add(absoluteParent);
-			this.parents.add(new Profile(this.path+"/"+parent, this.environment, this.verbose, this.showMinus, this.search));
+			this.parents.add(new Profile(absoluteParent, this.environment, this.verbose, this.showMinus, this.search));
 		}
 		this.allRelations.put(absolutePath, existingParents);
 
