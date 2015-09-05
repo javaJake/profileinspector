@@ -1,8 +1,0 @@
-Build it:
-ant
-
-For binary distribution:
-ant dist
-
-To run it:
-bin/profileinspector -p <path to profile>
